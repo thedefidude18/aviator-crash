@@ -1,11 +1,11 @@
 import React from "react"
-import Context, { BettedUserType, UserType } from "../../context";
+import Context, { BettedUserType } from "../../context";
 // import { useCrashContext } from "../Main/context";
 
 interface AllDataProps {
     pre: boolean
     setPre: React.Dispatch<React.SetStateAction<boolean>>
-    allData: UserType[] | BettedUserType[]
+    allData: BettedUserType[]
 }
 
 const AllData = ({ pre, setPre, allData }: AllDataProps) => {

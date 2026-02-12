@@ -13,6 +13,7 @@ export interface BettedUserType {
   cashouted: boolean;
   target: number;
   img: string;
+  bot?: boolean;
 }
 
 export interface UserType {
@@ -106,7 +107,7 @@ interface ContextType extends GameBetLimit, UserStatusType, GameStatusType {
   unityLoading: boolean;
   currentProgress: number;
   bettedUsers: BettedUserType[];
-  previousHand: UserType[];
+  previousHand: BettedUserType[];
   history: number[];
   rechargeState: boolean;
   myUnityContext: UnityContext;
@@ -208,7 +209,7 @@ export const Provider = ({ children }: any) => {
   const update = (attrs: Partial<ContextDataType>) => {
     setState({ ...state, ...attrs });
   };
-  const [previousHand, setPreviousHand] = React.useState<UserType[]>([]);
+  const [previousHand, setPreviousHand] = React.useState<BettedUserType[]>([]);
   const [history, setHistory] = React.useState<number[]>([]);
   const [userBetState, setUserBetState] = React.useState<UserStatusType>({
     fbetState: false,
@@ -286,7 +287,7 @@ export const Provider = ({ children }: any) => {
       setGameState(gameState);
     });
 
-    socket.on("previousHand", (previousHand: UserType[]) => {
+    socket.on("previousHand", (previousHand: BettedUserType[]) => {
       setPreviousHand(previousHand);
     });
 

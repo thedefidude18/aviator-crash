@@ -4,16 +4,14 @@ import React from "react";
 import AllData from "./all-data";
 import MyBets from "./my-bets";
 import TopHistory from "./top-history";
-import Context, { BettedUserType, UserType } from "../../context";
+import Context, { BettedUserType } from "../../context";
 
 export default function BetsUsers() {
   const { previousHand, bettedUsers, getMyBets } = React.useContext(Context);
   // const [state, , , getMyBets] = useCrashContext();
 
   const [headerType, setHeaderType] = React.useState("my");
-  const [allData, setAllData] = React.useState<UserType[] | BettedUserType[]>(
-    []
-  );
+  const [allData, setAllData] = React.useState<BettedUserType[]>([]);
   const [pre, setPre] = React.useState(false);
 
   const header = [
@@ -27,10 +25,12 @@ export default function BetsUsers() {
   };
 
   React.useEffect(() => {
+    const filterBots = (list: BettedUserType[]) =>
+      (list || []).filter((u) => !u.bot);
     if (pre) {
-      setAllData(previousHand);
+      setAllData(filterBots(previousHand));
     } else {
-      if (!!bettedUsers.length) setAllData(bettedUsers);
+      if (!!bettedUsers.length) setAllData(filterBots(bettedUsers));
     }
   }, [pre, bettedUsers, previousHand]);
 
