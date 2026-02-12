@@ -9,10 +9,27 @@ import Context from "../../context";
 let currentFlag = 0;
 
 export default function WebGLStarter() {
-	const { GameState, currentNum, time, unityState, myUnityContext,setCurrentTarget } = React.useContext(Context)
+	const { GameState, currentNum, time, unityState, myUnityContext, setCurrentTarget } = React.useContext(Context)
 	const [target, setTarget] = React.useState(1);
 	const [waiting, setWaiting] = React.useState(0);
 	const [flag, setFlag] = React.useState(1);
+	const [canvasReady, setCanvasReady] = React.useState(false);
+	const containerRef = React.useRef<HTMLDivElement>(null);
+
+	// Delay Unity mount until layout is complete - prevents "onwheel" null reference
+	// (Unity 2021.2+ throws when canvas is unavailable during init or removed before quit)
+	React.useEffect(() => {
+		let rafId: number;
+		const id = requestAnimationFrame(() => {
+			rafId = requestAnimationFrame(() => {
+				setCanvasReady(true);
+			});
+		});
+		return () => {
+			cancelAnimationFrame(id);
+			if (rafId !== undefined) cancelAnimationFrame(rafId);
+		};
+	}, []);
 
 	React.useEffect(() => {
 		let myInterval;
@@ -60,9 +77,9 @@ export default function WebGLStarter() {
 	}, [flag, myUnityContext]);
 
 	return (
-		<div className="crash-container">
+		<div className="crash-container" ref={containerRef}>
 			<div className="canvas">
-				<Unity unityContext={myUnityContext} matchWebGLToCanvasSize={true} />
+				{canvasReady && <Unity unityContext={myUnityContext} matchWebGLToCanvasSize={true} />}
 			</div>
 			<div className="crash-text-container">
 				{GameState === "BET" ? (

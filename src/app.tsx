@@ -6,7 +6,6 @@ import Main from "./components/Main";
 import propeller from "./assets/images/propeller.png";
 
 import Context from "./context";
-import { ContactMeTelegram } from "./components/cTelegram";
 // import "./App.scss";
 
 function App() {
@@ -14,7 +13,6 @@ function App() {
     React.useContext(Context);
   return (
     <div className="main-container">
-      <ContactMeTelegram />
       {!unityLoading && (
         <div className="myloading">
           <div className="loading-container">
